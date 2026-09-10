@@ -17,6 +17,9 @@ def emo_detector():
     sadness = response['sadness']
     dominant_emotion = response['dominant_emotion']
     
+    if dominant_emotion is None:
+	    return "Invalid text! Please try again!"
+	
     # Format and return the system response matching the required output
     return (
         f"For the given statement, the system response is 'anger': {anger}, "

@@ -1,3 +1,8 @@
+"""
+Executing this function initiates the application of emotion
+detection to be executed over the Flask channel and deployed on
+localhost:5000.
+"""
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -5,22 +10,24 @@ app = Flask("Emotion Detector")
 
 @app.route("/emotionDetector")
 def emo_detector():
-    # Retrieve the emotion to analyze from the request arguments
+    """
+    Analyze the text provided by the user and return the emotion scores
+    along with the dominant emotion.
+    """
     text_to_analyze = request.args.get('textToAnalyze')
-    # Pass the text to the emotion detector function and store the response
     response = emotion_detector(text_to_analyze)
-    
+
+    dominant_emotion = response['dominant_emotion']
+
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
+
     anger = response['anger']
     disgust = response['disgust']
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
-    dominant_emotion = response['dominant_emotion']
-    
-    if dominant_emotion is None:
-	    return "Invalid text! Please try again!"
-	
-    # Format and return the system response matching the required output
+
     return (
         f"For the given statement, the system response is 'anger': {anger}, "
         f"'disgust': {disgust}, 'fear': {fear}, 'joy': {joy} and "
@@ -29,6 +36,9 @@ def emo_detector():
 
 @app.route("/")
 def render_index_page():
+    """
+    Render the main application page.
+    """
     return render_template('index.html')
 
 if __name__ == "__main__":
